@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Tasker</string>
+
+    <string name="home">Home</string>
+    <string name="settings">Settings</string>
+    <string name="library">Library</string>
+    <string name="select">select</string>
+    <string name="remove">remove</string>
+    <string name="add">Add</string>
+    <string name="name">Name</string>
+    <string name="description">Description</string>
+    <string name="complete">Complete</string>
+    <string name="list_tasks">List Tasks</string>
+
+
+</resources>
