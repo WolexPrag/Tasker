@@ -8,11 +8,11 @@
 
     <LinearLayout
         android:id="@+id/upper_layout"
+        style="?android:attr/buttonBarStyle"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:orientation="horizontal"
-        app:layout_constraintTop_toTopOf="parent"
-        style="?android:attr/buttonBarStyle">
+        app:layout_constraintTop_toTopOf="parent">
 
         <Button
             android:id="@+id/home_button"
@@ -58,26 +58,21 @@
     </LinearLayout>
 
     <ScrollView
-        android:layout_width="309dp"
-        android:layout_height="814dp"
-        android:layout_marginStart="1dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:contentDescription="@string/list_tasks"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/linearLayout5"
         app:layout_constraintTop_toBottomOf="@+id/upper_layout">
 
         <LinearLayout
+            android:id="@+id/task_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
         </LinearLayout>
     </ScrollView>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentBottom="true">
-
-    </RelativeLayout>
 
 </android.support.constraint.ConstraintLayout>

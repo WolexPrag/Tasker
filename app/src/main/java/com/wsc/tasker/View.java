@@ -5,5 +5,4 @@ public abstract class View {
     public void Init(ViewModel viewModel){
         _viewModel = viewModel;
     }
-
 }
