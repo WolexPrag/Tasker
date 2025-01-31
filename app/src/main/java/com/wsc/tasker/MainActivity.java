@@ -1,37 +1,43 @@
 package com.wsc.tasker;
 
-import android.support.v7.app.AppCompatActivity;
+
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import com.wsc.tasker.task.Task;
+import com.wsc.tasker.task.TaskAdapter;
+
 public class MainActivity extends AppCompatActivity {
 
-    private LinearLayout container;
-    private Button addButton;
-    private Button homeButton;
-    private int c;
+    RecyclerView recyclerView;
+    TaskAdapter adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        container = findViewById(R.id.task_layout);
-        addButton = findViewById(R.id.add);
-        homeButton = findViewById(R.id.home_button);
-        c = 1;
-        homeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                addTextView(String.valueOf(c));
-            }});
-        addButton.setOnClickListener(t->{c=c+1;});
-    }
-    public void addTextView(String text){
-        TextView txtv = new TextView(this);
-        txtv.setText(text);
-        container.addView(txtv);
+        recyclerView = findViewById(R.id.task_layout);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        List<Task> tasks = new ArrayList<>();
+        tasks.add(new Task("wo1"));
+        tasks.add(new Task("wawa"));
+        tasks.add(new Task("niwaw"));
+
+        adapter = new TaskAdapter(tasks);
+        recyclerView.setAdapter(adapter);
 
     }
+
+
 }
+
+
