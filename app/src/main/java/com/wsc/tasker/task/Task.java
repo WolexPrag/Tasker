@@ -1,4 +1,4 @@
-package com.wsc.tasker.task;
+package com.wsc.tasker;
 
 import com.wsc.tasker.core.DateTeTime;
 

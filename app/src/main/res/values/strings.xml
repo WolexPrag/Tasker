@@ -8,6 +8,11 @@
     <string name="remove">remove</string>
     <string name="add">Add</string>
     <string name="edit">Edit</string>
+    <string name="filter">Filter</string>
+    <string name="analyze">Analyze</string>
+    <string name="other">Other</string>
+    <string name="undo">undo</string>
+    <string name="redo">redo</string>
     <string name="name">Name</string>
     <string name="description">Description</string>
     <string name="complete">Complete</string>

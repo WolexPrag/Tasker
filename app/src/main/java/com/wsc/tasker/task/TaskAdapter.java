@@ -1,5 +1,6 @@
 package com.wsc.tasker.task;
 
+import com.wsc.tasker.Task;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
