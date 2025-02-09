@@ -17,7 +17,9 @@ public class ErrorActivity extends AppCompatActivity{
         setContentView(R.layout.error_main);
         TextView errorText = findViewById(R.id.error_text);
         Button returnButton = findViewById(R.id.return_button);
+        if(error != null){
         errorText.setText("Error {[ " + error.getMessage()+" ]}");
+        }
         returnButton.setOnClickListener(v->{
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
