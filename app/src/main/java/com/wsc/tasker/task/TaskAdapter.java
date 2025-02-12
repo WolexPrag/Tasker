@@ -5,7 +5,9 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -13,10 +15,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.wsc.tasker.R;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
-    private final List<Task> _tasks;
+    private List<Task> tasks;
 
+    public TaskAdapter() {
+        this.tasks = new ArrayList<>();
+    }
     public TaskAdapter(List<Task> tasks) {
-        _tasks = tasks;
+        this.tasks = new ArrayList<>(tasks);
     }
 
     @NonNull
@@ -28,12 +33,23 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull TaskAdapter.TaskViewHolder holder, int position) {
-        holder.text.setText(_tasks.get(position).getName());
+        holder.text.setText(tasks.get(position).getName());
     }
-
+    public void setTasks(List<Task> tasks){
+        this.tasks = tasks;
+        notifyDataSetChanged();
+    }
+    public void addTask(Task task){
+        tasks.add(task);
+        notifyDataSetChanged();
+    }
+    public void removeTask(@NonNull Predicate<Task> condition){
+        tasks.removeIf(condition);
+        notifyDataSetChanged();
+    }
     @Override
     public int getItemCount() {
-        return _tasks.size();
+        return tasks.size();
     }
 
     public static class TaskViewHolder extends RecyclerView.ViewHolder {

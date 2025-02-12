@@ -15,7 +15,7 @@ public class LocalNotifier<T1> implements INotifier<T1> {
 
     @Override
     public void subscribe(ISubscriber<T1> subscriber) {
-        Disposable disposable = subject.subscribe();
+        Disposable disposable = subject.subscribeWith(subscriber.getObserver());
         subscriber.setSubscription(disposable,this);
         compositeDisposable.add(disposable);
 

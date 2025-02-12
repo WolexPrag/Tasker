@@ -1,14 +1,14 @@
 package com.wsc.tasker.event;
 
-import io.reactivex.rxjava3.core.Observer;
 import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.observers.DisposableObserver;
 
 public class LocalSingleSubscriber <T1> implements ISubscriber{
-    private Observer<T1> observer;
+    private DisposableObserver<T1> observer;
     private Disposable disposable;
     private INotifier<T1> source;
 
-    public LocalSingleSubscriber(Observer<T1> observer){
+    public LocalSingleSubscriber(DisposableObserver<T1> observer){
         this.observer = observer;
     }
 
@@ -29,7 +29,9 @@ public class LocalSingleSubscriber <T1> implements ISubscriber{
     }
 
     @Override
-    public Observer getObserver() {
+    public DisposableObserver<T1> getObserver() {
         return observer;
     }
+
+
 }
