@@ -58,7 +58,9 @@ public class LocalTasksMenuViewModel extends ViewModel implements ITaskMenuViewM
         tasks.stream().filter(condition).forEach(action);
         invokeUpdateTask();
     }
-
+    public void createNewTask(){
+        addTask(new Task().setName("New Task"));
+    }
     @Override
     public void addTask(@NonNull Task task) {
         tasks.add(task);
@@ -73,7 +75,7 @@ public class LocalTasksMenuViewModel extends ViewModel implements ITaskMenuViewM
 
     @Override
     public void setTasks(@NonNull List<Task> tasks) {
-        tasks = new ArrayList<>(tasks);
+        this.tasks = new ArrayList<>(tasks);
         invokeUpdateTask();
     }
 
@@ -89,7 +91,7 @@ public class LocalTasksMenuViewModel extends ViewModel implements ITaskMenuViewM
     }
 
     @Override
-    public void unsubscribeOnUpdateTasks(@NonNull ISubscriber<List<Task>> subscriber) {
+    public void unsubscribeOnUpdateTasks(@NonNull ISubscriber<List<Task>> subscriber) throws Exception {
         updateTaskNotifier.unsubscribe(subscriber);
     }
 }

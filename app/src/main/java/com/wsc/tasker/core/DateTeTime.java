@@ -35,7 +35,7 @@ public class DateTeTime {
         return value._dateTime.equals(this._dateTime);
     }
 
-    public static DateTeTime GetCurrentDate() {
+    public static DateTeTime getCurrentDate() {
         return new DateTeTime(LocalDateTime.now());
     }
 }

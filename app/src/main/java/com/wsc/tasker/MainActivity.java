@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +25,38 @@ import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.observers.DisposableObserver;
 
 public class MainActivity extends AppCompatActivity {
+    public class ButtonsMainActivity {
+        public ButtonsMainActivity(){
+            this.home = findViewById(R.id.home_button);
+            this.undo = findViewById(R.id.undo_button);
+            this.redo = findViewById(R.id.redo_button);
+
+            this.add = findViewById(R.id.add_button);
+            this.select = findViewById(R.id.select_button);
+            this.edit = findViewById(R.id.edit_button);
+            this.filter = findViewById(R.id.filter_button);
+            this.analyze = findViewById(R.id.analyze_button);
+            this.other = findViewById(R.id.other_button);
+        }
+        Button home;
+        Button redo;
+        Button undo;
+
+        Button add;
+        Button select;
+        Button edit;
+        Button filter;
+        Button analyze;
+        Button other;
+    }
+
+    ButtonsMainActivity buttons;
+
+    RecyclerView taskRecyclerView;
+    TaskAdapter taskAdapter;
+
+    List<TaskSpace> taskSpaces;
+    LocalTasksMenuViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         try {
-            Start(savedInstanceState);
+            Awake(savedInstanceState);
         } catch (Exception e) {
             ErrorActivity.error = e;
             Intent intent = new Intent(this, ErrorActivity.class);
@@ -40,30 +74,31 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void Start(Bundle savedInstanceState) {
-        Button homeButton = findViewById(R.id.home_button);
-        Button undoButton = findViewById(R.id.undo_button);
-        Button redoButton = findViewById(R.id.redo_button);
+    public void Awake(Bundle savedInstanceState) {
+        buttons = new ButtonsMainActivity();
+        taskRecyclerView = findViewById(R.id.task_layout);
+        taskRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        taskAdapter = new TaskAdapter();
+        taskRecyclerView.setAdapter(taskAdapter);
+        taskSpaces = new ArrayList<>();
+        Start(savedInstanceState);
+    }
 
-        Button addButton = findViewById(R.id.add_button);
-        Button selectButton = findViewById(R.id.select_button);
-        Button editButton = findViewById(R.id.edit_button);
-        Button filterButton = findViewById(R.id.filter_button);
-        Button analyzeButton = findViewById(R.id.analyze_button);
-        Button otherButton = findViewById(R.id.other_button);
-        List<TaskSpace> taskSpaces = new ArrayList<>();
+    public void Start(Bundle savedInstanceState) {
         TaskSpace taskSpace = new TaskSpace();
         taskSpaces.add(taskSpace);
 
-        LocalTasksMenuViewModel viewModel = new LocalTasksMenuViewModel(taskSpaces.get(0));
-        TaskAdapter taskAdapter = new TaskAdapter();
-        ISubscriber<List<Task>> updateTasksSubscriber = getSubscriberForTaskAdapter(taskAdapter,viewModel);
+        viewModel = new LocalTasksMenuViewModel(taskSpaces.get(0));
+
+
+        ISubscriber<List<Task>> updateTasksSubscriber = getSubscriberForTaskAdapter(taskAdapter, viewModel);
         viewModel.subscribeOnUpdateTasks(updateTasksSubscriber);
-        addButton.setOnClickListener(v->{
-            viewModel.addTask(new Task());
+        buttons.add.setOnClickListener(v -> {
+            viewModel.createNewTask();
         });
     }
-    public ISubscriber<List<Task>> getSubscriberForTaskAdapter(TaskAdapter taskAdapter, ITaskMenuViewModel viewModel){
+
+    public ISubscriber<List<Task>> getSubscriberForTaskAdapter(TaskAdapter taskAdapter, ITaskMenuViewModel viewModel) {
         return new LocalSingleSubscriber<List<Task>>(new DisposableObserver<List<Task>>() {
             @Override
             public void onNext(@NonNull List<Task> tasks) {

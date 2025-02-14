@@ -25,5 +25,5 @@ public interface ITaskMenuViewModel {
 
     void subscribeOnUpdateTasks(@NonNull ISubscriber<List<Task>> subscriber);
 
-    void unsubscribeOnUpdateTasks(@NonNull ISubscriber<List<Task>> subscriber);
+    void unsubscribeOnUpdateTasks(@NonNull ISubscriber<List<Task>> subscriber) throws Exception;
 }

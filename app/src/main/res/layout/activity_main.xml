@@ -37,33 +37,38 @@
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/main_panel">
+        app:layout_constraintTop_toBottomOf="@+id/main_panel">
 
         <Button
             android:id="@+id/select_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/select" />
+
         <Button
             android:id="@+id/add_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/add" />
+
         <Button
             android:id="@+id/edit_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/edit" />
+
         <Button
             android:id="@+id/filter_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/filter" />
+
         <Button
             android:id="@+id/analyze_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/analyze" />
+
         <Button
             android:id="@+id/other_button"
             android:layout_width="match_parent"
@@ -83,7 +88,6 @@
         app:layout_constraintStart_toEndOf="@+id/task_operation_panel"
         app:layout_constraintTop_toBottomOf="@+id/main_panel"
         app:layout_constraintVertical_bias="0.0" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

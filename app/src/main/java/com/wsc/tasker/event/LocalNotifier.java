@@ -1,6 +1,7 @@
 package com.wsc.tasker.event;
 
-import io.reactivex.rxjava3.core.Observer;
+import androidx.annotation.NonNull;
+
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.subjects.PublishSubject;
@@ -14,16 +15,16 @@ public class LocalNotifier<T1> implements INotifier<T1> {
     }
 
     @Override
-    public void subscribe(ISubscriber<T1> subscriber) {
-        Disposable disposable = subject.subscribeWith(subscriber.getObserver());
-        subscriber.setSubscription(disposable,this);
+    public void subscribe(@NonNull ISubscriber<T1> subscriber) {
+        Disposable disposable = subject.subscribeWith(subscriber.getDisposableObserver());
+        subscriber.setSubscription(new ISubscriber.Subscription<T1>(disposable,this));
         compositeDisposable.add(disposable);
 
     }
 
     @Override
-    public void unsubscribe(ISubscriber subscriber) {
-        Disposable disposable = subscriber.getSubscription(this);
+    public void unsubscribe(@NonNull ISubscriber<T1> subscriber) throws Exception {
+        Disposable disposable = subscriber.getDisposable(this);
         if (disposable != null && !disposable.isDisposed()) {
             disposable.dispose();
             compositeDisposable.remove(disposable);

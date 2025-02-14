@@ -11,7 +11,7 @@ public class Task {
     private List<DateTeTime> complition;
 
     public Task(){
-        created = DateTeTime.GetCurrentDate();
+        created = DateTeTime.getCurrentDate();
     }
     public Task(DateTeTime created){
         super();
@@ -38,7 +38,9 @@ public class Task {
 
         complition.add(Date);
     }
-
+    public void addCompletion(){
+        addCompletion(DateTeTime.getCurrentDate());
+    }
     public void removeCompletion(DateTeTime Date) {
         complition.remove(Date);
     }

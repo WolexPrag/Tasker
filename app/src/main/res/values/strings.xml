@@ -16,9 +16,11 @@
     <string name="name">Name</string>
     <string name="description">Description</string>
     <string name="complete">Complete</string>
+    <string name="accept">Accept</string>
     <string name="list_tasks">List Tasks</string>
     <string name="default_task_text">Task text</string>
     <string name="about_complete">Is complete task</string>
+    <string name="input_text">input</string>
 
 
 </resources>
