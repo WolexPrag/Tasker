@@ -15,18 +15,18 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 import androidx.annotation.NonNull;
+
 import io.reactivex.rxjava3.core.Observer;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.observers.DisposableObserver;
 
-public class LocalTasksMenuViewModel extends ViewModel implements ITaskMenuViewModel {
+public class LocalMainModeViewModel extends ViewModel implements IMainModeViewModel {
     private TaskSpace model;
     private List<Task> tasks;
     private INotifier<List<Task>> updateTaskNotifier;
     private ISubscriber<List<Task>> updateTaskSubscriber;
 
-
-    public LocalTasksMenuViewModel( @NonNull TaskSpace model) {
+    public LocalMainModeViewModel(@NonNull TaskSpace model) {
         this.model = model;
         updateTaskNotifier = new LocalNotifier<>();
         updateTaskSubscriber = new LocalSingleSubscriber<>(new DisposableObserver<List<Task>>() {
@@ -54,29 +54,8 @@ public class LocalTasksMenuViewModel extends ViewModel implements ITaskMenuViewM
     }
 
     @Override
-    public void editTask(@NonNull Consumer<Task> action, @NonNull Predicate<Task> condition) {
-        tasks.stream().filter(condition).forEach(action);
-        invokeUpdateTask();
-    }
-    public void createNewTask(){
+    public void createNewTask() {
         addTask(new Task().setName("New Task"));
-    }
-    @Override
-    public void addTask(@NonNull Task task) {
-        tasks.add(task);
-        invokeUpdateTask();
-    }
-
-    @Override
-    public void removeTask(@NonNull Predicate<Task> condition) {
-        tasks.removeIf(condition);
-        invokeUpdateTask();
-    }
-
-    @Override
-    public void setTasks(@NonNull List<Task> tasks) {
-        this.tasks = new ArrayList<>(tasks);
-        invokeUpdateTask();
     }
 
     @Override
@@ -94,4 +73,15 @@ public class LocalTasksMenuViewModel extends ViewModel implements ITaskMenuViewM
     public void unsubscribeOnUpdateTasks(@NonNull ISubscriber<List<Task>> subscriber) throws Exception {
         updateTaskNotifier.unsubscribe(subscriber);
     }
+
+    private void addTask(@NonNull Task task) {
+        tasks.add(task);
+        invokeUpdateTask();
+    }
+
+    private void setTasks(@NonNull List<Task> tasks) {
+        this.tasks = new ArrayList<>(tasks);
+        invokeUpdateTask();
+    }
+
 }

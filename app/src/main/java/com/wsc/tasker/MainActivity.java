@@ -5,119 +5,90 @@ import android.os.Bundle;
 import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModel;
+
+import com.wsc.tasker.MVVM.*;
+import com.wsc.tasker.task.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.wsc.tasker.MVVM.ITaskMenuViewModel;
-import com.wsc.tasker.MVVM.LocalTasksMenuViewModel;
-import com.wsc.tasker.event.ISubscriber;
-import com.wsc.tasker.event.LocalSingleSubscriber;
-import com.wsc.tasker.task.Task;
-import com.wsc.tasker.task.TaskAdapter;
-import com.wsc.tasker.task.TaskSpace;
-
-import io.reactivex.rxjava3.annotations.NonNull;
-import io.reactivex.rxjava3.core.Observer;
-import io.reactivex.rxjava3.disposables.Disposable;
-import io.reactivex.rxjava3.observers.DisposableObserver;
 
 public class MainActivity extends AppCompatActivity {
-    public class ButtonsMainActivity {
-        public ButtonsMainActivity(){
+    public class Buttons {
+        public Buttons() {
             this.home = findViewById(R.id.home_button);
             this.undo = findViewById(R.id.undo_button);
             this.redo = findViewById(R.id.redo_button);
 
-            this.add = findViewById(R.id.add_button);
-            this.select = findViewById(R.id.select_button);
-            this.edit = findViewById(R.id.edit_button);
-            this.filter = findViewById(R.id.filter_button);
-            this.analyze = findViewById(R.id.analyze_button);
-            this.other = findViewById(R.id.other_button);
         }
+
         Button home;
         Button redo;
         Button undo;
-
-        Button add;
-        Button select;
-        Button edit;
-        Button filter;
-        Button analyze;
-        Button other;
     }
 
-    ButtonsMainActivity buttons;
+    public class Mode<T1> {
+        public Mode(T1 viewModel, Fragment fragment) {
+            this.viewModel = viewModel;
+            this.fragment = fragment;
+        }
 
-    RecyclerView taskRecyclerView;
-    TaskAdapter taskAdapter;
+        T1 viewModel;
+        Fragment fragment;
 
+        public void replaceFragment() {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_container, fragment);
+            fragmentTransaction.commit();
+        }
+    }
+
+    Buttons buttons;
     List<TaskSpace> taskSpaces;
-    LocalTasksMenuViewModel viewModel;
 
-    @Override
+    Mode<IMainModeViewModel> mainMode;
+    Mode<IEditorModeViewModel> editorMode;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         try {
             Awake(savedInstanceState);
+            Start(savedInstanceState);
         } catch (Exception e) {
-            ErrorActivity.error = e;
-            Intent intent = new Intent(this, ErrorActivity.class);
-            startActivity(intent);
+            showErrorActivity(e);
         }
-
-
     }
 
     public void Awake(Bundle savedInstanceState) {
-        buttons = new ButtonsMainActivity();
-        taskRecyclerView = findViewById(R.id.task_layout);
-        taskRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        taskAdapter = new TaskAdapter();
-        taskRecyclerView.setAdapter(taskAdapter);
+        buttons = new Buttons();
         taskSpaces = new ArrayList<>();
-        Start(savedInstanceState);
+        List<Task> tasks = new ArrayList<>();
+        tasks.add(new Task().setName("tam param"));
+        taskSpaces.add(new TaskSpace(tasks));
+
+        LocalMainModeViewModel viewModel = new LocalMainModeViewModel(getTaskSpace());
+        mainMode = new Mode<>(viewModel,  MainFragmentMainActivity.newInstance(viewModel));
+    }
+
+    public TaskSpace getTaskSpace() {
+        return taskSpaces.get(0);
     }
 
     public void Start(Bundle savedInstanceState) {
-        TaskSpace taskSpace = new TaskSpace();
-        taskSpaces.add(taskSpace);
-
-        viewModel = new LocalTasksMenuViewModel(taskSpaces.get(0));
-
-
-        ISubscriber<List<Task>> updateTasksSubscriber = getSubscriberForTaskAdapter(taskAdapter, viewModel);
-        viewModel.subscribeOnUpdateTasks(updateTasksSubscriber);
-        buttons.add.setOnClickListener(v -> {
-            viewModel.createNewTask();
-        });
+        mainMode.replaceFragment();
     }
-
-    public ISubscriber<List<Task>> getSubscriberForTaskAdapter(TaskAdapter taskAdapter, ITaskMenuViewModel viewModel) {
-        return new LocalSingleSubscriber<List<Task>>(new DisposableObserver<List<Task>>() {
-            @Override
-            public void onNext(@NonNull List<Task> tasks) {
-                taskAdapter.setTasks(tasks);
-            }
-
-            @Override
-            public void onError(@NonNull Throwable e) {
-
-            }
-
-            @Override
-            public void onComplete() {
-
-            }
-        });
+    public void showErrorActivity(Exception error) {
+        ErrorActivity.error = error;
+        Intent intent = new Intent(this, ErrorActivity.class);
+        startActivity(intent);
     }
-
-
 }
+
 
 

@@ -30,64 +30,12 @@
             android:text="@string/redo" />
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/task_operation_panel"
-        android:layout_width="90dp"
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/main_panel">
-
-        <Button
-            android:id="@+id/select_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/select" />
-
-        <Button
-            android:id="@+id/add_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/add" />
-
-        <Button
-            android:id="@+id/edit_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/edit" />
-
-        <Button
-            android:id="@+id/filter_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/filter" />
-
-        <Button
-            android:id="@+id/analyze_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/analyze" />
-
-        <Button
-            android:id="@+id/other_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/other" />
-    </LinearLayout>
-
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/task_layout"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:padding="10dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/task_operation_panel"
-        app:layout_constraintTop_toBottomOf="@+id/main_panel"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/main_panel" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

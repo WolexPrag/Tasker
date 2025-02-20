@@ -1,4 +1,5 @@
 package com.wsc.tasker.task;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,9 +14,13 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.wsc.tasker.R;
+import com.wsc.tasker.event.INotifier;
+import com.wsc.tasker.event.ISubscriber;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
     private List<Task> tasks;
+    private INotifier<Task> clickOnTask;
+    private INotifier<Task> updateStateTask;
 
     public TaskAdapter() {
         this.tasks = new ArrayList<>();
@@ -34,6 +39,11 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     @Override
     public void onBindViewHolder(@NonNull TaskAdapter.TaskViewHolder holder, int position) {
         holder.text.setText(tasks.get(position).getName());
+
+
+        holder.itemView.setOnClickListener(v ->{
+            Log.i("adapter click on task","cliked on item (" + tasks.get(position).getName() + " ; " + tasks.get(position).getName() + ")");
+        });
     }
     public void setTasks(List<Task> tasks){
         this.tasks = tasks;
@@ -50,6 +60,18 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     @Override
     public int getItemCount() {
         return tasks.size();
+    }
+    public void subscribeOnClickTask(ISubscriber<Task> subscriber){
+        clickOnTask.subscribe(subscriber);
+    }
+    public void unsubscribeOnClickTask(ISubscriber<Task> subscriber){
+        clickOnTask.subscribe(subscriber);
+    }
+    public void subscribeOnUpdateStateTask(ISubscriber<Task> subscriber){
+        clickOnTask.subscribe(subscriber);
+    }
+    public void unsubscribeOnUpdateStateTask(ISubscriber<Task> subscriber){
+        clickOnTask.subscribe(subscriber);
     }
 
     public static class TaskViewHolder extends RecyclerView.ViewHolder {
