@@ -44,11 +44,9 @@ public class Task {
     public void removeCompletion(DateTeTime Date) {
         complition.remove(Date);
     }
-
     public Boolean isCompletionInDate(DateTeTime Date) {
-        return complition.stream().anyMatch(v -> v.equals(Date));
+        return complition.stream().anyMatch(v->v.isTheSameDay(Date));
     }
-
     public DateTeTime getDateCreated() {
         return created;
     }

@@ -1,5 +1,7 @@
 package com.wsc.tasker.core;
 
+import androidx.annotation.NonNull;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -31,8 +33,22 @@ public class DateTeTime {
         return _dateTime.toString();
     }
 
-    public Boolean equals(DateTeTime value) {
-        return value._dateTime.equals(this._dateTime);
+    public Boolean equals(@NonNull DateTeTime other) {
+        return other._dateTime.equals(this._dateTime);
+    }
+    public Boolean isAfter(@NonNull DateTeTime other){
+        return _dateTime.isAfter(other._dateTime);
+    }
+    public Boolean isBefore(@NonNull DateTeTime other){
+        return _dateTime.isBefore(other._dateTime);
+    }
+
+    public Boolean isInArea(DateTeTime min, DateTeTime max) {
+        return (isAfter(min) || equals(min)) &&
+                (isBefore(max) || equals(max._dateTime));
+    }
+    public Boolean isTheSameDay(DateTeTime other){
+        return this._dateTime.getDayOfYear() == other._dateTime.getDayOfYear() && this._dateTime.getYear() == other._dateTime.getYear();
     }
 
     public static DateTeTime getCurrentDate() {

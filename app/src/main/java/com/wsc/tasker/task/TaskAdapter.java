@@ -14,14 +14,24 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.wsc.tasker.R;
+import com.wsc.tasker.core.DateTeTime;
 import com.wsc.tasker.event.INotifier;
 import com.wsc.tasker.event.ISubscriber;
 
+import org.w3c.dom.Node;
+
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
     private List<Task> tasks;
-    private INotifier<Task> clickOnTask;
-    private INotifier<Task> updateStateTask;
-
+    private INotifier<NodeTask> clickOnTask;
+    private INotifier<NodeTask> updateStateTask;
+    public class NodeTask{
+        public NodeTask(Task task, int position){
+        this.task = task;
+        this.position = position;
+        }
+        public Task task;
+        public int position;
+    }
     public TaskAdapter() {
         this.tasks = new ArrayList<>();
     }
@@ -39,12 +49,14 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     @Override
     public void onBindViewHolder(@NonNull TaskAdapter.TaskViewHolder holder, int position) {
         holder.text.setText(tasks.get(position).getName());
-
+        holder.checkBox.setActivated(tasks.get(position).isCompletionInDate(DateTeTime.getCurrentDate()));
 
         holder.itemView.setOnClickListener(v ->{
-            Log.i("adapter click on task","cliked on item (" + tasks.get(position).getName() + " ; " + tasks.get(position).getName() + ")");
-        });
+            invokeClickTask(new NodeTask(tasks.get(position),position));
+            });
+        holder.checkBox.setOnClickListener();
     }
+
     public void setTasks(List<Task> tasks){
         this.tasks = tasks;
         notifyDataSetChanged();
@@ -61,17 +73,23 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     public int getItemCount() {
         return tasks.size();
     }
-    public void subscribeOnClickTask(ISubscriber<Task> subscriber){
+    private void invokeClickTask(NodeTask value){
+        clickOnTask.notify(value);
+    }
+    private void invokeUpdateStateTask(NodeTask value){
+        updateStateTask.notify(value);
+    }
+    public void subscribeOnClickTask(ISubscriber<NodeTask> subscriber){
         clickOnTask.subscribe(subscriber);
     }
-    public void unsubscribeOnClickTask(ISubscriber<Task> subscriber){
-        clickOnTask.subscribe(subscriber);
+    public void unsubscribeOnClickTask(ISubscriber<NodeTask> subscriber) throws Exception{
+        clickOnTask.unsubscribe(subscriber);
     }
-    public void subscribeOnUpdateStateTask(ISubscriber<Task> subscriber){
-        clickOnTask.subscribe(subscriber);
+    public void subscribeOnUpdateStateTask(ISubscriber<NodeTask> subscriber){
+        updateStateTask.subscribe(subscriber);
     }
-    public void unsubscribeOnUpdateStateTask(ISubscriber<Task> subscriber){
-        clickOnTask.subscribe(subscriber);
+    public void unsubscribeOnUpdateStateTask(ISubscriber<NodeTask> subscriber) throws Exception{
+        updateStateTask.unsubscribe(subscriber);
     }
 
     public static class TaskViewHolder extends RecyclerView.ViewHolder {

@@ -19,7 +19,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     public class Buttons {
-        public Buttons() {
+        public Buttons(View view) {
             this.home = findViewById(R.id.home_button);
             this.undo = findViewById(R.id.undo_button);
             this.redo = findViewById(R.id.redo_button);
