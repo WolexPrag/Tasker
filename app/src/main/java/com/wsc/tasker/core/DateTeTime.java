@@ -6,52 +6,93 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class DateTeTime {
-    private final LocalDateTime _dateTime;
+    private int year;
+    private int month;
+    private int day;
+    private int hour;
+    private int minute;
+    private int second;
 
-    public DateTeTime() {
-        _dateTime = LocalDateTime.now();
-    }
-
-    public DateTeTime(LocalDateTime dateTime) {
-        _dateTime = dateTime;
-    }
-
-    public DateTeTime(DateTeTime value) {
-        _dateTime = LocalDateTime.from(value._dateTime);
-    }
-
-    public DateTeTime copy() {
-        return new DateTeTime(this);
+    public DateTeTime(int year, int month, int day, int hour, int minute, int second) {
+        this.year = year;
+        this.month = month;
+        this.day = day;
+        this.hour = hour;
+        this.minute = minute;
+        this.second = second;
     }
 
-    public String format(String pattern) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
-        return this._dateTime.format(formatter);
+    public DateTeTime(DateTeTime date) {
+        this.year = date.year;
+        this.month = date.month;
+        this.day = date.day;
+        this.hour = date.hour;
+        this.minute = date.minute;
+        this.second = date.second;
     }
 
-    public String toString() {
-        return _dateTime.toString();
+    @NonNull
+    public static DateTeTime now() {
+        LocalDateTime now = LocalDateTime.now();
+        return new DateTeTime(now.getYear(), now.getMonthValue(), now.getDayOfMonth(),
+                now.getHour(), now.getMinute(), now.getSecond());
     }
 
-    public Boolean equals(@NonNull DateTeTime other) {
-        return other._dateTime.equals(this._dateTime);
-    }
-    public Boolean isAfter(@NonNull DateTeTime other){
-        return _dateTime.isAfter(other._dateTime);
-    }
-    public Boolean isBefore(@NonNull DateTeTime other){
-        return _dateTime.isBefore(other._dateTime);
+    public int getYear() {
+        return year;
     }
 
-    public Boolean isInArea(DateTeTime min, DateTeTime max) {
-        return (isAfter(min) || equals(min)) &&
-                (isBefore(max) || equals(max._dateTime));
-    }
-    public Boolean isTheSameDay(DateTeTime other){
-        return this._dateTime.getDayOfYear() == other._dateTime.getDayOfYear() && this._dateTime.getYear() == other._dateTime.getYear();
+    public void setYear(int year) {
+        this.year = year;
     }
 
-    public static DateTeTime getCurrentDate() {
-        return new DateTeTime(LocalDateTime.now());
+    public int getMonth() {
+        return month;
+    }
+
+    public void setMonth(int month) {
+        this.month = month;
+    }
+
+    public int getDay() {
+        return day;
+    }
+
+    public void setDay(int day) {
+        this.day = day;
+    }
+
+    public int getHour() {
+        return hour;
+    }
+
+    public void setHour(int hour) {
+        this.hour = hour;
+    }
+
+    public int getMinute() {
+        return minute;
+    }
+
+    public void setMinute(int minute) {
+        this.minute = minute;
+    }
+
+    public int getSecond() {
+        return second;
+    }
+
+    public void setSecond(int second) {
+        this.second = second;
+    }
+
+    public boolean isBefore(DateTeTime other) {
+
+        return this.getYear() < other.getYear() ||
+                this.getMonth() < other.getMonth() ||
+                this.getDay() < other.getDay() ||
+                this.getHour() < other.getHour() ||
+                this.getMinute() < other.getMinute() ||
+                this.getSecond() < other.getSecond();
     }
 }

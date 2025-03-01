@@ -1,53 +1,29 @@
 package com.wsc.tasker.task;
-
 import com.wsc.tasker.core.DateTeTime;
 
-import java.util.List;
-
-public class Task {
-    private String name;
-    private String description;
+public abstract class Task {
     private DateTeTime created;
-    private List<DateTeTime> complition;
+    private String description;
+    private String name;
 
     public Task(){
-        created = DateTeTime.getCurrentDate();
-    }
-    public Task(DateTeTime created){
-        super();
-        setName(name);
-    }
-    public Task setName(String name) {
-        this.name = name;
-        return this;
+        created = DateTeTime.now();
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void addCompletion(DateTeTime Date) {
-
-        complition.add(Date);
-    }
-    public void addCompletion(){
-        addCompletion(DateTeTime.getCurrentDate());
-    }
-    public void removeCompletion(DateTeTime Date) {
-        complition.remove(Date);
-    }
-    public Boolean isCompletionInDate(DateTeTime Date) {
-        return complition.stream().anyMatch(v->v.isTheSameDay(Date));
-    }
-    public DateTeTime getDateCreated() {
+    public DateTeTime getDateCreated(){
         return created;
     }
+    public String getName(){
+        return name;
+    }
+    public void setName(String name){
+        this.name = name;
+    }
+    public String getDescription(){
+        return description;
+    }
+    public void setDescription(String description){
+        this.description = description;
+    }
+    public abstract boolean isComplete();
 }
