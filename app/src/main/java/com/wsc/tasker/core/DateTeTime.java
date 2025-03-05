@@ -3,96 +3,98 @@ package com.wsc.tasker.core;
 import androidx.annotation.NonNull;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
+@SuppressWarnings("unused")
 public class DateTeTime {
-    private int year;
-    private int month;
-    private int day;
-    private int hour;
-    private int minute;
-    private int second;
+    private LocalDateTime dateTime;
 
-    public DateTeTime(int year, int month, int day, int hour, int minute, int second) {
-        this.year = year;
-        this.month = month;
-        this.day = day;
-        this.hour = hour;
-        this.minute = minute;
-        this.second = second;
+    private DateTeTime() {
+        throw new UnsupportedOperationException("Please use the now() method to get an instance.");
     }
 
-    public DateTeTime(DateTeTime date) {
-        this.year = date.year;
-        this.month = date.month;
-        this.day = date.day;
-        this.hour = date.hour;
-        this.minute = date.minute;
-        this.second = date.second;
-    }
-
-    @NonNull
-    public static DateTeTime now() {
-        LocalDateTime now = LocalDateTime.now();
-        return new DateTeTime(now.getYear(), now.getMonthValue(), now.getDayOfMonth(),
-                now.getHour(), now.getMinute(), now.getSecond());
+    private DateTeTime(LocalDateTime dateTime) {
+        this.dateTime = dateTime;
     }
 
     public int getYear() {
-        return year;
+        return dateTime.getYear();
     }
 
     public void setYear(int year) {
-        this.year = year;
+        this.dateTime = this.dateTime.withYear(year);
     }
 
     public int getMonth() {
-        return month;
+        return dateTime.getMonthValue();
     }
 
     public void setMonth(int month) {
-        this.month = month;
+        this.dateTime = this.dateTime.withMonth(month);
     }
 
     public int getDay() {
-        return day;
+        return dateTime.getDayOfMonth();
     }
 
     public void setDay(int day) {
-        this.day = day;
+        this.dateTime = this.dateTime.withDayOfMonth(day);
     }
 
     public int getHour() {
-        return hour;
+        return dateTime.getHour();
     }
 
     public void setHour(int hour) {
-        this.hour = hour;
+        this.dateTime = this.dateTime.withHour(hour);
     }
 
     public int getMinute() {
-        return minute;
+        return dateTime.getMinute();
     }
 
     public void setMinute(int minute) {
-        this.minute = minute;
+        this.dateTime = this.dateTime.withMinute(minute);
     }
 
     public int getSecond() {
-        return second;
+        return dateTime.getSecond();
     }
 
     public void setSecond(int second) {
-        this.second = second;
+        this.dateTime = this.dateTime.withSecond(second);
+    }
+
+    public boolean isBeforeDateOnly(DateTeTime other) {
+        return this.dateTime.toLocalDate().isBefore(other.dateTime.toLocalDate());
+    }
+
+    public boolean isAfterDateOnly(DateTeTime other) {
+        return this.dateTime.toLocalDate().isAfter(other.dateTime.toLocalDate());
+    }
+
+    public boolean isEqualDateOnly(DateTeTime other) {
+        return this.dateTime.toLocalDate().isEqual(other.dateTime.toLocalDate());
     }
 
     public boolean isBefore(DateTeTime other) {
+        return this.dateTime.isBefore(other.dateTime);
+    }
 
-        return this.getYear() < other.getYear() ||
-                this.getMonth() < other.getMonth() ||
-                this.getDay() < other.getDay() ||
-                this.getHour() < other.getHour() ||
-                this.getMinute() < other.getMinute() ||
-                this.getSecond() < other.getSecond();
+    public boolean isEqual(DateTeTime other) {
+        return this.dateTime.equals(other.dateTime);
+    }
+
+    public boolean isAfter(DateTeTime other) {
+        return this.dateTime.isAfter(other.dateTime);
+    }
+
+    @Override
+    @NonNull
+    public String toString() {
+        return dateTime.toString();
+    }
+
+    public static DateTeTime now() {
+        return new DateTeTime(LocalDateTime.now());
     }
 }

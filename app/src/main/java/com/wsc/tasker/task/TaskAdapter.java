@@ -15,13 +15,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.wsc.tasker.R;
 import com.wsc.tasker.core.DateTeTime;
+import com.wsc.tasker.event.Notifier;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
     private List<Task> tasks;
+    private Notifier<Integer> clickOnTask;
+    private Notifier<>
     public void setTasks(List<Task> tasks){
         this.tasks = tasks;
         notifyDataSetChanged();
     }
+
     @NonNull
     @Override
     public TaskAdapter.TaskViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -35,7 +39,9 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     @Override
     public void onBindViewHolder(@NonNull TaskAdapter.TaskViewHolder holder, int position) {
         holder.text.setText(getTask(position).getName());
-
+        holder.itemView.setOnClickListener(v->{
+            clickOnTask.notify(1);
+        });
     }
 
     @Override
@@ -46,6 +52,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     public static class TaskViewHolder extends RecyclerView.ViewHolder {
         CheckBox checkBox;
         TextView text;
+
 
         public TaskViewHolder(@NonNull View itemView) {
             super(itemView);
