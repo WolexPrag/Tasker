@@ -2,14 +2,30 @@ package com.wsc.tasker.MVVM;
 
 import com.wsc.tasker.event.Notifier;
 import com.wsc.tasker.task.Task;
+import com.wsc.tasker.task.TaskSpace;
 
 import java.util.List;
 
-import io.reactivex.rxjava3.core.Observer;
-import io.reactivex.rxjava3.disposables.Disposable;
-
+@SuppressWarnings("unused")
 public interface IMainModeViewModel {
+
+    void Init(TaskSpace taskSpace);
+
     List<Task> getCopyTasks();
-    void subscribeOnUpdateTask(Notifier.Subscriber<List<Task>> subscriber);
-    void unsubscribeOnUpdateTask(Notifier.Subscriber<List<Task>> subscriber);
+
+    void subscribeOnUpdateTasks(Notifier.Subscriber<List<Task>> subscriber);
+
+    void unsubscribeOnUpdateTasks(Notifier.Subscriber<List<Task>> subscriber);
+
+    void subscribeOnAddTask(Notifier.Subscriber<Integer> subscriber);
+
+    void unsubscribeOnAddTask(Notifier.Subscriber<Integer> subscriber);
+
+    void subscribeOnRemoveTask(Notifier.Subscriber<Integer> subscriber);
+
+    void unsubscribeOnRemoveTask(Notifier.Subscriber<Integer> subscriber);
+
+    void subscribeOnSetTask(Notifier.Subscriber<Integer> subscriber);
+
+    void unsubscribeOnUpdateTask(Notifier.Subscriber<Integer> subscriber);
 }

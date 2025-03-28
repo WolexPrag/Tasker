@@ -1,29 +1,91 @@
 package com.wsc.tasker.task;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Predicate;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.wsc.tasker.MVVM.IMainModeViewModel;
 import com.wsc.tasker.R;
-import com.wsc.tasker.core.DateTeTime;
 import com.wsc.tasker.event.Notifier;
+import com.wsc.tasker.event.SimpleDisposableObserver;
 
+import java.util.List;
+
+import io.reactivex.rxjava3.observers.DisposableObserver;
+
+@SuppressWarnings("unused")
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
-    private List<Task> tasks;
-    private Notifier<Integer> clickOnTask;
-    private Notifier<>
-    public void setTasks(List<Task> tasks){
-        this.tasks = tasks;
+    private IMainModeViewModel viewModel;
+    private Notifier.Subscriber<List<Task>> subscriberOnUpdateTasks;
+    private Notifier.Subscriber<Integer> subscriberOnAddTask;
+    private Notifier.Subscriber<Integer> subscriberOnRemoveTask;
+    private Notifier.Subscriber<Integer> subscriberOnUpdateTask;
+
+    public static TaskAdapter getInstance(IMainModeViewModel viewModel) {
+        TaskAdapter ret = new TaskAdapter();
+
+        ret.initSubscriber();
+        ret.setViewModel(viewModel);
+
+        return ret;
+    }
+
+    private void initSubscriber() {
+        subscriberOnUpdateTasks = new Notifier.Subscriber<>(new SimpleDisposableObserver<List<Task>>() {
+            @SuppressLint("NotifyDataSetChanged")
+            @Override
+            public void onNext(@io.reactivex.rxjava3.annotations.NonNull List<Task> tasks) {
+                notifyDataSetChanged();
+            }
+        });
+        subscriberOnAddTask = new Notifier.Subscriber<>(new SimpleDisposableObserver<Integer>() {
+            @Override
+            public void onNext(@io.reactivex.rxjava3.annotations.NonNull Integer position) {
+                notifyItemInserted(position);
+            }
+
+        });
+        subscriberOnRemoveTask = new Notifier.Subscriber<>(new SimpleDisposableObserver<Integer>() {
+            @Override
+            public void onNext(@io.reactivex.rxjava3.annotations.NonNull Integer position) {
+                notifyItemRemoved(position);
+            }
+        });
+        subscriberOnUpdateTask = new Notifier.Subscriber<>(new SimpleDisposableObserver<Integer>() {
+            @Override
+            public void onNext(@io.reactivex.rxjava3.annotations.NonNull Integer position) {
+                notifyItemChanged(position);
+            }
+        });
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    public void setViewModel(IMainModeViewModel viewModel) {
+        this.viewModel = viewModel;
+        subscribingViewModel(viewModel);
         notifyDataSetChanged();
+    }
+
+    private void subscribingViewModel(IMainModeViewModel viewModel) {
+        viewModel.unsubscribeOnUpdateTasks(subscriberOnUpdateTasks);
+        viewModel.subscribeOnAddTask(subscriberOnAddTask);
+        viewModel.subscribeOnRemoveTask(subscriberOnRemoveTask);
+        viewModel.subscribeOnSetTask(subscriberOnUpdateTask);
+    }
+
+    private Task getTask(int position) {
+        return viewModel.getCopyTasks().get(position);
+    }
+
+    @Override
+    public int getItemCount() {
+        return viewModel.getCopyTasks().size();
     }
 
     @NonNull
@@ -33,20 +95,10 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         return new TaskViewHolder(view);
     }
 
-    private Task getTask(int position){
-        return tasks.get(position);
-    }
     @Override
     public void onBindViewHolder(@NonNull TaskAdapter.TaskViewHolder holder, int position) {
         holder.text.setText(getTask(position).getName());
-        holder.itemView.setOnClickListener(v->{
-            clickOnTask.notify(1);
-        });
-    }
-
-    @Override
-    public int getItemCount() {
-        return 0;
+        holder.checkBox.setActivated(getTask(position).isComplete());
     }
 
     public static class TaskViewHolder extends RecyclerView.ViewHolder {

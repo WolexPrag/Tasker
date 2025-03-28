@@ -1,9 +1,7 @@
 package com.wsc.tasker.event;
 
 import io.reactivex.rxjava3.annotations.NonNull;
-import io.reactivex.rxjava3.core.Observer;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
-import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.observers.DisposableObserver;
 import io.reactivex.rxjava3.subjects.PublishSubject;
 
@@ -13,8 +11,9 @@ public class Notifier<TypeData>{
     private CompositeDisposable disposable;
     public Notifier(){
         subject = PublishSubject.create();
+        disposable = new CompositeDisposable();
     }
-    public void notifiy(TypeData value){
+    public void notify(TypeData value){
         subject.onNext(value);
     }
     public void subscribe(@NonNull Subscriber<TypeData> subscriber){
@@ -28,8 +27,8 @@ public class Notifier<TypeData>{
         return true;
     }
     public static class Subscriber<TypeData> {
-        private final DisposableObserver<TypeData> disposableObserver;
-        public Subscriber(DisposableObserver<TypeData> disposableObserver) {
+        private final SimpleDisposableObserver<TypeData> disposableObserver;
+        public Subscriber(SimpleDisposableObserver<TypeData> disposableObserver) {
             this.disposableObserver = disposableObserver;
         }
     }

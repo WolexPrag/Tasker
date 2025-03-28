@@ -10,11 +10,14 @@ public abstract class Task {
     private String description;
     private String name;
 
+
     public Task() {
         created = DateTeTime.now();
         description = "";
         name = "";
     }
+
+    public abstract Task getCopy();
 
     @NonNull
     public DateTeTime getDateCreated() {
