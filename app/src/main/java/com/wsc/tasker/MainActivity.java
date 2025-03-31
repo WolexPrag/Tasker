@@ -10,8 +10,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.wsc.tasker.MVVM.mainMode.IMainViewModeViewModel;
-import com.wsc.tasker.MVVM.mainMode.LocalMainViewModeViewModel;
 import com.wsc.tasker.task.*;
 
 import java.util.ArrayList;
@@ -34,7 +32,6 @@ public class MainActivity extends AppCompatActivity {
     Buttons buttons;
 
     MainFragmentTaskSpace mainFragmentTaskSpace;
-    IMainViewModeViewModel viewModel;
     TaskSpace taskSpace;
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         try {
             Awake(savedInstanceState);
+            Start(savedInstanceState);
         } catch (Exception e) {
             showErrorActivity(e);
         }
@@ -50,30 +48,31 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void Awake(Bundle savedInstanceState) {
-        viewModel = new LocalMainViewModeViewModel();
         taskSpace = new TaskSpace();
-        List<Task> tasks = new ArrayList<Task>();
-        for (int i = 0; i <= 100; i++) {
-            Task task = new TaskForTest();
-            task.setName("Netu day: " + i);
-            task.setDescription("Netu I don't know why " + i + " is absence");
-            tasks.add(task);
-        }
 
-        taskSpace.setTasks(tasks);
+        taskSpace.setTasks(getTestTasks());
 
-        viewModel.Init(taskSpace);
-
-        mainFragmentTaskSpace = MainFragmentTaskSpace.getInstance(viewModel);
+        mainFragmentTaskSpace = MainFragmentTaskSpace.getInstance();
 
 
-        Start(savedInstanceState);
     }
 
     public void Start(Bundle savedInstanceState) {
 
         showFragmentMainView(savedInstanceState, mainFragmentTaskSpace);
     }
+
+    private static List<Task> getTestTasks() {
+        List<Task> ret = new ArrayList<Task>();
+        for (int i = 0; i <= 100; i++) {
+            Task task = new TaskForTest();
+            task.setName("Netu day: " + i);
+            task.setDescription("Netu I don't know why " + i + " is absence");
+            ret.add(task);
+        }
+        return ret;
+    }
+
 
     public void showFragmentMainView(Bundle savedInstanceState, Fragment fragment) {
         if (savedInstanceState == null) {

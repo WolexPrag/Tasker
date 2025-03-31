@@ -12,8 +12,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.wsc.tasker.MVVM.mainMode.IMainViewModeViewModel;
-import com.wsc.tasker.MVVM.mainMode.LocalMainViewModeViewModel;
 import com.wsc.tasker.task.TaskAdapter;
 
 public class MainFragmentTaskSpace extends Fragment {
@@ -37,7 +35,6 @@ public class MainFragmentTaskSpace extends Fragment {
 
     private RecyclerView recyclerView;
     private TaskAdapter taskAdapter;
-    private IMainViewModeViewModel viewModel;
 
     @Nullable
     @Override
@@ -48,25 +45,13 @@ public class MainFragmentTaskSpace extends Fragment {
         return inflater.inflate(R.layout.main_fragment_task_space, container, false);
     }
 
-    public static MainFragmentTaskSpace getInstance(@NonNull IMainViewModeViewModel viewModel) {
+    public static MainFragmentTaskSpace getInstance() {
         MainFragmentTaskSpace ret = new MainFragmentTaskSpace();
-        ret.setViewModel(viewModel);
-        ret.initTaskAdapter();
         return ret;
-    }
-    public void setViewModel(@NonNull IMainViewModeViewModel viewModel){
-        this.viewModel = viewModel;
-        if(taskAdapter!=null){
-            taskAdapter.setViewModel(viewModel);
-        }
-    }
-    private void initTaskAdapter(){
-        this.taskAdapter = TaskAdapter.getInstance(viewModel);
     }
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        this.viewModel = new LocalMainViewModeViewModel();
         initRecycleView(view.findViewById(R.id.task_layout));
     }
     private void initRecycleView(@NonNull RecyclerView recyclerView){

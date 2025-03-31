@@ -7,14 +7,11 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.wsc.tasker.MVVM.IModeViewModel;
-import com.wsc.tasker.MVVM.mainMode.IMainViewModeViewModel;
 import com.wsc.tasker.R;
-import com.wsc.tasker.event.IListChangeObserver;
-import com.wsc.tasker.event.ITaskListChangeObserver;
 import com.wsc.tasker.event.Notifier;
 import com.wsc.tasker.event.SimpleDisposableObserver;
 
@@ -22,18 +19,14 @@ import java.util.List;
 
 @SuppressWarnings("unused")
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
-    private IModeViewModel viewModel;
     private Notifier.Subscriber<List<Task>> subscriberOnUpdateTasks;
     private Notifier.Subscriber<Integer> subscriberOnAddTask;
     private Notifier.Subscriber<Integer> subscriberOnRemoveTask;
     private Notifier.Subscriber<Integer> subscriberOnUpdateTask;
 
-    public static TaskAdapter getInstance(IModeViewModel viewModel) {
+    public static TaskAdapter getInstance() {
         TaskAdapter ret = new TaskAdapter();
-
         ret.initSubscriber();
-        ret.setViewModel(viewModel);
-
         return ret;
     }
 
@@ -66,27 +59,15 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         });
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    public void setViewModel(IModeViewModel viewModel) {
-        this.viewModel = viewModel;
-        subscribingViewModel(viewModel);
-        notifyDataSetChanged();
-    }
 
-    private void subscribingViewModel(ITaskListChangeObserver listObserver) {
-        listObserver.subscribeOnSetList(subscriberOnUpdateTasks);
-        listObserver.subscribeOnAddItem(subscriberOnAddTask);
-        listObserver.subscribeOnRemoveItem(subscriberOnRemoveTask);
-        listObserver.subscribeOnUpdateItem(subscriberOnUpdateTask);
-    }
 
     private Task getTask(int position) {
-        return viewModel.getCopyTasks().get(position);
+        return null;
     }
 
     @Override
     public int getItemCount() {
-        return viewModel.getCopyTasks().size();
+        return 0;
     }
 
     @NonNull
