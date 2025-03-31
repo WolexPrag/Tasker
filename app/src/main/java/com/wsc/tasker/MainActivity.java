@@ -9,9 +9,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.ViewModel;
 
-import com.wsc.tasker.MVVM.*;
+import com.wsc.tasker.MVVM.mainMode.IMainViewModeViewModel;
+import com.wsc.tasker.MVVM.mainMode.LocalMainViewModeViewModel;
 import com.wsc.tasker.task.*;
 
 import java.util.ArrayList;
@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
     Buttons buttons;
 
     MainFragmentTaskSpace mainFragmentTaskSpace;
-    IMainModeViewModel viewModel;
+    IMainViewModeViewModel viewModel;
     TaskSpace taskSpace;
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void Awake(Bundle savedInstanceState) {
-        viewModel = new LocalMainModeViewModel();
+        viewModel = new LocalMainViewModeViewModel();
         taskSpace = new TaskSpace();
         List<Task> tasks = new ArrayList<Task>();
         for (int i = 0; i <= 100; i++) {
@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
 
         viewModel.Init(taskSpace);
 
-        mainFragmentTaskSpace = MainFragmentTaskSpace.init(viewModel);
+        mainFragmentTaskSpace = MainFragmentTaskSpace.getInstance(viewModel);
 
 
         Start(savedInstanceState);

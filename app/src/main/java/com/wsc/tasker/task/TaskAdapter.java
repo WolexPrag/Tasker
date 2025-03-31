@@ -10,24 +10,25 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.wsc.tasker.MVVM.IMainModeViewModel;
+import com.wsc.tasker.MVVM.IModeViewModel;
+import com.wsc.tasker.MVVM.mainMode.IMainViewModeViewModel;
 import com.wsc.tasker.R;
+import com.wsc.tasker.event.IListChangeObserver;
+import com.wsc.tasker.event.ITaskListChangeObserver;
 import com.wsc.tasker.event.Notifier;
 import com.wsc.tasker.event.SimpleDisposableObserver;
 
 import java.util.List;
 
-import io.reactivex.rxjava3.observers.DisposableObserver;
-
 @SuppressWarnings("unused")
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
-    private IMainModeViewModel viewModel;
+    private IModeViewModel viewModel;
     private Notifier.Subscriber<List<Task>> subscriberOnUpdateTasks;
     private Notifier.Subscriber<Integer> subscriberOnAddTask;
     private Notifier.Subscriber<Integer> subscriberOnRemoveTask;
     private Notifier.Subscriber<Integer> subscriberOnUpdateTask;
 
-    public static TaskAdapter getInstance(IMainModeViewModel viewModel) {
+    public static TaskAdapter getInstance(IModeViewModel viewModel) {
         TaskAdapter ret = new TaskAdapter();
 
         ret.initSubscriber();
@@ -66,17 +67,17 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    public void setViewModel(IMainModeViewModel viewModel) {
+    public void setViewModel(IModeViewModel viewModel) {
         this.viewModel = viewModel;
         subscribingViewModel(viewModel);
         notifyDataSetChanged();
     }
 
-    private void subscribingViewModel(IMainModeViewModel viewModel) {
-        viewModel.unsubscribeOnUpdateTasks(subscriberOnUpdateTasks);
-        viewModel.subscribeOnAddTask(subscriberOnAddTask);
-        viewModel.subscribeOnRemoveTask(subscriberOnRemoveTask);
-        viewModel.subscribeOnSetTask(subscriberOnUpdateTask);
+    private void subscribingViewModel(ITaskListChangeObserver listObserver) {
+        listObserver.subscribeOnSetList(subscriberOnUpdateTasks);
+        listObserver.subscribeOnAddItem(subscriberOnAddTask);
+        listObserver.subscribeOnRemoveItem(subscriberOnRemoveTask);
+        listObserver.subscribeOnUpdateItem(subscriberOnUpdateTask);
     }
 
     private Task getTask(int position) {
@@ -99,6 +100,13 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     public void onBindViewHolder(@NonNull TaskAdapter.TaskViewHolder holder, int position) {
         holder.text.setText(getTask(position).getName());
         holder.checkBox.setActivated(getTask(position).isComplete());
+
+        holder.itemView.setOnClickListener(v -> {
+
+        });
+        holder.checkBox.setOnClickListener(v -> {
+
+        });
     }
 
     public static class TaskViewHolder extends RecyclerView.ViewHolder {
