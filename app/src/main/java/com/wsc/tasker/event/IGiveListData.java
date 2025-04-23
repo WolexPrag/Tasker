@@ -6,6 +6,5 @@ import java.util.List;
 
 public interface IGiveListData <T>{
     List<T> getCopyData();
-    List<T> getCopyDataInRange(Integer fromPosition,Integer toPosition);
     T getCopyItem(Integer position);
 }

@@ -10,7 +10,12 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.wsc.tasker.task.*;
+import com.wsc.tasker.MVVM.MainViewMode.IMainViewModeViewModel;
+import com.wsc.tasker.MVVM.MainViewMode.LocalMainViewModeVM;
+import com.wsc.tasker.task.ITaskSpaceGiver;
+import com.wsc.tasker.task.Task;
+import com.wsc.tasker.task.TaskForTest;
+import com.wsc.tasker.task.TestTaskSpaceGiver;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,16 +35,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     Buttons buttons;
+    ITaskSpaceGiver taskSpaceGiver;
+    MainViewModeFragment mainViewModeFragment;
 
-    MainFragmentTaskSpace mainFragmentTaskSpace;
-    TaskSpace taskSpace;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         try {
+            View view = findViewById(R.id.main_panel);
             Awake(savedInstanceState);
+            initButtons(view);
             Start(savedInstanceState);
+
         } catch (Exception e) {
             showErrorActivity(e);
         }
@@ -48,18 +56,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void Awake(Bundle savedInstanceState) {
-        taskSpace = new TaskSpace();
-
-        taskSpace.setTasks(getTestTasks());
-
-        mainFragmentTaskSpace = MainFragmentTaskSpace.getInstance();
-
-
+        initGiver();
+        initMainViewMode();
+    }
+    public void initButtons(View view){
+        buttons = new Buttons(view);
+    }
+    public void initGiver(){
+        taskSpaceGiver = new TestTaskSpaceGiver();
+    }
+    public void initMainViewMode(){
+        mainViewModeFragment = MainViewModeFragment.getInstance(new LocalMainViewModeVM());
     }
 
     public void Start(Bundle savedInstanceState) {
 
-        showFragmentMainView(savedInstanceState, mainFragmentTaskSpace);
+        showOnContainer(savedInstanceState, mainViewModeFragment);
     }
 
     private static List<Task> getTestTasks() {
@@ -74,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void showFragmentMainView(Bundle savedInstanceState, Fragment fragment) {
+    public void showOnContainer(Bundle savedInstanceState, Fragment fragment) {
         if (savedInstanceState == null) {
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction transaction = fragmentManager.beginTransaction();

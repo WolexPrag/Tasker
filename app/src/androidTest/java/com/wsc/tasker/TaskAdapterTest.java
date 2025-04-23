@@ -16,7 +16,7 @@ import java.util.*;
 @RunWith(AndroidJUnit4.class)
 public class TaskAdapterTest {
 
-    private TaskAdapter adapter;
+
     private List<Task> testData;
 
 

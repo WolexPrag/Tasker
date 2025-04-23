@@ -1,12 +1,10 @@
-package com.wsc.tasker.task;
+package com.wsc.tasker.MVVM.MainViewMode;
 
-import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
-
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,39 +12,42 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.wsc.tasker.R;
 import com.wsc.tasker.event.IListTaskOperationsHandler;
 import com.wsc.tasker.event.ListOperationsSubscriber;
+import com.wsc.tasker.task.Task;
 
 import java.util.List;
 import java.util.Map;
 
-@SuppressWarnings("unused")
-public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
+
+public class MainViewModeTaskAdapter extends RecyclerView.Adapter<MainViewModeTaskAdapter.TaskViewHolder> {
     private ListOperationsSubscriber subscriberTasks;
     private IListTaskOperationsHandler handler;
     private List<Task> tasks;
-    public static TaskAdapter getInstance(IListTaskOperationsHandler  handler) {
-        TaskAdapter ret = new TaskAdapter();
+
+    public static MainViewModeTaskAdapter getInstance(IListTaskOperationsHandler handler) {
+        MainViewModeTaskAdapter ret = new MainViewModeTaskAdapter();
         ret.initSubscriber();
         return ret;
     }
 
 
-    public void subscribeOnListOperationsHandler(IListTaskOperationsHandler handler) {
+    private void subscribeOnListOperationsHandler(IListTaskOperationsHandler handler) {
         subscriberTasks.subscribe(handler);
     }
+
     private void updateData(int pos) {
-        tasks.set(pos,handler.getCopyItem(pos));
+        tasks.set(pos, handler.getCopyItem(pos));
     }
 
 
     @NonNull
     @Override
-    public TaskAdapter.TaskViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public TaskViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.task_maket, parent, false);
         return new TaskViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull TaskAdapter.TaskViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull TaskViewHolder holder, int position) {
         holder.text.setText(getTask(position).getName());
         holder.checkBox.setActivated(getTask(position).isComplete());
 
@@ -57,12 +58,15 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             clickOnCheckBox(position);
         });
     }
+
     public void clickOnItemView(int pos) {
 
     }
-    public void clickOnCheckBox(int pos){
+
+    public void clickOnCheckBox(int pos) {
 
     }
+
     private Task getTask(int position) {
         return tasks.get(position);
     }
@@ -100,6 +104,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             }
         };
     }
+
     public static class TaskViewHolder extends RecyclerView.ViewHolder {
         CheckBox checkBox;
         TextView text;
