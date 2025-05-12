@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class ObjectPool<T>
+public abstract class ObjectPool<T> where T : IPoolable
 {
     [SerializeField] private List<T> storage;
     public ObjectPool(int startCopacity)
@@ -38,7 +38,13 @@ public abstract class ObjectPool<T>
             ExpandPool();
         }
     }
-    protected abstract void OnGet(T value);
-    protected abstract void OnReturn(T value);
+    protected virtual void OnGet(T value)
+    {
+        value.OnSpawn();
+    }
+    protected virtual void OnReturn(T value)
+    {
+        value.OnDespawn();
+    }
     protected abstract void ExpandPool();
 }
