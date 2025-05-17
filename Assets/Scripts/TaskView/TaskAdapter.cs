@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using UniRx;
+using static UnityEditor.PlayerSettings;
 
 
 public class TaskAdapter : MonoBehaviour
@@ -11,10 +12,14 @@ public class TaskAdapter : MonoBehaviour
     [SerializeField] private TaskViewPool _pool;
     [SerializeField] private List<TaskViewHolder> _activeObject;
     private ITasksListObserver _tasksObserver;
-    public event Action<int> OnClickItem;
+    private List<int> _selected;
+    public List<int> Selected
+    {
+        get { return _selected; }
+    } 
     public TaskAdapter()
     {
-        
+
     }
     public void SetObserver(ITasksListObserver tasksObserver)
     {
@@ -30,41 +35,64 @@ public class TaskAdapter : MonoBehaviour
         tasksObserver.OnItemRemoved += RemoveItem;
         tasksObserver.OnItemReplaced += ReplaceItem;
         tasksObserver.OnItemChanged += RefreshItem;
-        RefreshAllItems();
+        RefreshRange(0,tasksObserver.Tasks.Count);
     }
-
-    protected void RefreshAllItems()
+    protected void RefreshRange(int start,int end)
     {
-        for (int i = 0; i < _tasksObserver.Tasks.Count; i++)
+        for (int pos = start; pos < end; pos++)
         {
-            if(_activeObject.Count <= i)
+            if (_activeObject.Count <= pos)
             {
                 _activeObject.Add(_pool.Get());
+                _activeObject[pos].OnLongClick.Subscribe(t => { LongClick(pos); });
+                _activeObject[pos].OnShortClick.Subscribe(t => { ShortClick(pos); });
             }
-            RefreshItem(i);
-        }   
+            
+            RefreshItem(pos);
+        }
     }
     protected void RefreshItem(int pos)
     {
         _activeObject[pos].Bind(_tasksObserver.Tasks[pos]);
     }
+    private void ShortClick(int pos)
+    {
+        if (_selected.Contains(pos))
+        {
+            Debug.Log("Open Aditional settings");
+        }
+        else
+        {
+            _activeObject[pos].Select();
+            _selected.Add(pos);
+        }
+    }
+    private void LongClick(int pos)
+    {
+        if (_selected.Contains(pos))
+        {
+            _activeObject[pos].UnSelect();
+            _selected.Remove(pos);
+        }
+    }
     protected void AddItem(int pos)
     {
-        _activeObject.Insert(pos,_pool.Get());
+        _activeObject.Insert(pos, _pool.Get());
         _activeObject[pos].transform.SetSiblingIndex(pos);
+        RefreshRange(pos,_tasksObserver.Tasks.Count);
     }
     protected void RemoveItem(int pos)
     {
         _pool.Return(_activeObject[pos]);
         _activeObject.RemoveAt(pos);
-
+        RefreshRange(pos, _tasksObserver.Tasks.Count);
     }
-    protected void ReplaceItem(int fromPos,int toPos)
+    protected void ReplaceItem(int fromPos, int toPos)
     {
-
-        TaskViewHolder replaceItem = _activeObject[fromPos]; 
+        TaskViewHolder replaceItem = _activeObject[fromPos];
         _activeObject.RemoveAt(fromPos);
         _activeObject.Insert(toPos, replaceItem);
 
+        RefreshRange(fromPos, _tasksObserver.Tasks.Count);
     }
 }

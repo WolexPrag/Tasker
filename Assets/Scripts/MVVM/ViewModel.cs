@@ -13,6 +13,7 @@ public class ViewModel
         _storageService = storageService;
         _taskSpace = taskSpace;
     }
+   
 
     public void Add(Task task)
     {

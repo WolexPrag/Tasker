@@ -16,27 +16,35 @@ public class TaskViewHolder : MonoBehaviour, IPoolable
 
     public UnityAction<bool> OnCheckBoxValueChanged;
 
+    private CompositeDisposable _disposables = new CompositeDisposable();
     private Subject<Unit> _onShortClick = new Subject<Unit>();
     private Subject<Unit> _onLongClick = new Subject<Unit>();
-    private CompositeDisposable _disposables = new CompositeDisposable();
-
-    [SerializeField] private float _longPressDuration = 1f;
     public IObservable<Unit> OnShortClick => _onShortClick;
     public IObservable<Unit> OnLongClick => _onLongClick;
-    
 
-    private void Start()
-    { }
+
+    [SerializeField] private float _longPressDuration = 1f;
+
+    
     public void Bind(Task task)
     {
-        checkBox.isOn = false;
+        checkBox.isOn = task.Status.IsComplete;
         nameText.SetText(task.Name);
         descriptionText.SetText(task.Description);
         InitSubscribe();
     }
+    public void Select()
+    {
+        _background.color = Color.blue;
+    }
+    public void UnSelect()
+    {
+        _background.color = _defaultColor;
+    }
     private void InitSubscribe()
     {
         checkBox.onValueChanged.AddListener(value => OnCheckBoxValueChanged?.Invoke(value));
+        
         _background.OnPointerDownAsObservable()
             .Where(e => IsClickOnThisObject(e))
             .SelectMany(e =>
@@ -44,7 +52,7 @@ public class TaskViewHolder : MonoBehaviour, IPoolable
                     .TakeUntil(Observable.Merge(
                         _background.OnPointerUpAsObservable(),
                         _background.OnPointerExitAsObservable()
-                    ))
+                    ))   
                     .Take(1)
             )
             .Subscribe(
@@ -72,6 +80,7 @@ public class TaskViewHolder : MonoBehaviour, IPoolable
         _disposables.Dispose();
         _onShortClick.OnCompleted();
         _onLongClick.OnCompleted();
+        UnSelect();
     }
 
 }

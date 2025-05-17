@@ -9,19 +9,10 @@ public class Bootstrap : MonoBehaviour
     [SerializeField] private ViewModel _viewModel;
     void Awake()
     {
-        
+        List<string> a = new List<string>();
 
-        _viewModel = new ViewModel(GetTestData(),new JsonToFileStorageService());
+        _viewModel = new ViewModel(new TaskSpace(),new JsonToFileStorageService());
         _view.Init(_viewModel);
-    }
-    public TaskSpace GetTestData()
-    {
-        TaskSpace ret = new TaskSpace();
-        for (int i = 0; i < 100; i++)
-        {
-            ret.Add(new Task() {Name=$"Name {i}" , Description=$"Description {i}"});
-        }
-        return ret;
     }
     
 }
