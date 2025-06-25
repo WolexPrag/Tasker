@@ -7,72 +7,70 @@ using UniRx.Triggers;
 using System;
 using UnityEngine.Events;
 
-public class TaskViewHolder : MonoBehaviour, IPoolable
+public class TaskViewHolder : MonoBehaviour
 {
     public TextMeshProUGUI nameText;
     public TextMeshProUGUI descriptionText;
     public Toggle checkBox;
     [SerializeField] private Image _background;
 
-    public UnityAction<bool> OnCheckBoxValueChanged;
 
     private CompositeDisposable _disposables = new CompositeDisposable();
+
     private Subject<Unit> _onShortClick = new Subject<Unit>();
     private Subject<Unit> _onLongClick = new Subject<Unit>();
+    private Subject<bool> _onCheckBoxValueChanged = new Subject<bool>();
+
     public IObservable<Unit> OnShortClick => _onShortClick;
     public IObservable<Unit> OnLongClick => _onLongClick;
-
-
-    [SerializeField] private float _longPressDuration = 1f;
-
+    public IObservable<bool> OnCheckBoxValueChanged =>_onCheckBoxValueChanged;
     
+    [SerializeField] private float _longPressDuration = 0.5f;
+
+   
+
+    public void Awake()
+    {
+        InitSubscribtions();
+    }
     public void Bind(Task task)
     {
         checkBox.isOn = task.Status.IsComplete;
         nameText.SetText(task.Name);
         descriptionText.SetText(task.Description);
-        InitSubscribe();
+        InitSubscribtions();
     }
-    public void Select()
+    private void InitSubscribtions()
     {
-        _background.color = Color.blue;
-    }
-    public void UnSelect()
-    {
-        _background.color = _defaultColor;
-    }
-    private void InitSubscribe()
-    {
-        checkBox.onValueChanged.AddListener(value => OnCheckBoxValueChanged?.Invoke(value));
-        
+        checkBox.onValueChanged.AddListener(value => _onCheckBoxValueChanged?.OnNext(value));
         _background.OnPointerDownAsObservable()
-            .Where(e => IsClickOnThisObject(e))
-            .SelectMany(e =>
-                Observable.Timer(System.TimeSpan.FromSeconds(_longPressDuration))
-                    .TakeUntil(Observable.Merge(
-                        _background.OnPointerUpAsObservable(),
-                        _background.OnPointerExitAsObservable()
-                    ))   
-                    .Take(1)
-            )
-            .Subscribe(
-                _ => _onLongClick.OnNext(Unit.Default),
-                () => _onShortClick.OnNext(Unit.Default)
-            )
-            .AddTo(_disposables);
+           .SelectMany(e =>
+           {
+               return Observable.Timer(System.TimeSpan.FromSeconds(_longPressDuration))
+                   .TakeUntil(_background.OnPointerUpAsObservable()) 
+                   .DoOnCompleted(() => _onShortClick.OnNext(Unit.Default)) 
+                   .Take(1);
+           })
+           .Subscribe(_ => _onLongClick.OnNext(Unit.Default)) 
+           .AddTo(_disposables);
     }
     private bool IsClickOnThisObject(PointerEventData eventData)
     {
-        return eventData.pointerEnter == gameObject ||
-               eventData.pointerPress == gameObject;
+        return eventData.pointerCurrentRaycast.gameObject != checkBox.gameObject;
     }
-    public void OnSpawn()
+    public void UnSubscribeOnClicks()
     {
-        gameObject.SetActive(true);
+        _onCheckBoxValueChanged.OnCompleted();
+        _onShortClick.OnCompleted();
+        _onLongClick.OnCompleted();
     }
-    public void OnDespawn()
+    public void Select()
     {
-        gameObject.SetActive(false);
+        transform.localScale = new Vector3(2, 2, 2);
+    }
+    public void UnSelect()
+    {
+        transform.localScale = new Vector3(1, 1, 1);
     }
 
     private void OnDestroy()

@@ -5,7 +5,7 @@ using UnityEngine;
 
 public interface ITasksListObserver
 {
-    public List<Task> Tasks { get; }
+    public IReadOnlyList<Task> Tasks { get; }
     public event ItemAddedHandler OnItemAdded;
     public event ItemRemovedHandler OnItemRemoved;
     public event ItemReplacedHandler OnItemReplaced;

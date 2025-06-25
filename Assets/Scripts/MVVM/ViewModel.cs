@@ -1,28 +1,52 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UniRx;
 using UnityEngine;
 
+[SerializeField]
 public class ViewModel 
 {
     private IStorageService _storageService;
     private TaskSpace _taskSpace;
     public TaskSpace TaskSpace { get { return _taskSpace; } }
+    private List<int> _selected;
     public ViewModel(TaskSpace taskSpace,IStorageService storageService)
     {
         _storageService = storageService;
         _taskSpace = taskSpace;
+        _selected = new List<int>();
     }
-   
-
-    public void Add(Task task)
+    public void OnLongClick((int pos, Unit unit) value)
     {
-        _taskSpace.Add(task);
+        if (!_selected.Contains(value.pos)){
+            _selected.Add(value.pos);
+        }
+        Debug.Log($"Item on {value.pos} pos was long clicked");
     }
-    public void Remove(int pos)
+    public void OnShortClick((int pos, Unit unit) value)
     {
-        _taskSpace.Remove(pos);
-    }             
+        if (_selected.Contains(value.pos))
+        {
+            _selected.Remove(value.pos);
+        }
+        Debug.Log($"Item on {value.pos} pos was short clicked");
+    }
+    public void OnCheckBoxValueChanged((int pos, bool value) value)
+    {
+        Debug.Log($"Item on {value.pos} pos was changed on {value.value}");
+    }
+    public void OnClickAdd()
+    {
+        _taskSpace.Add(new Task() { Name="Empty Task",Description="The Description also empty" });
+    }
+    public void OnClickRemove()
+    {
+        for (int i = 0; i < _selected.Count; i++)
+        {
+            _taskSpace.Remove(_selected[i]);   
+        }
+    }
     public void Replace(int from, int to)
     {             
         _taskSpace.Replace(from, to);

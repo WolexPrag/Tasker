@@ -7,7 +7,7 @@ using System;
 public class TaskSpace : ITasksListObserver
 {
     protected List<Task> tasks = new List<Task>();
-    public List<Task> Tasks { get { return  tasks; } }
+    public IReadOnlyList<Task> Tasks { get { return  tasks.AsReadOnly(); } }
 
     private string name;
     public String Name { get; set; }
