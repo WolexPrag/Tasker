@@ -1,9 +1,8 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using Tasker.Adapter;
-using UnityEngine;
 using UniRx;
+using UnityEngine;
+using UnityEngine.UI;
+
 namespace Tasker.MVVM
 {
     public class TaskSpaceView : MonoBehaviour
@@ -11,24 +10,30 @@ namespace Tasker.MVVM
         private TaskSpaceViewModel _viewModel;
         private TaskViewAdapter _adapter;
         [SerializeField] private TaskViewHolder _prefab;
+        [SerializeField] private Button add;
+        [SerializeField] private Button remove;
+
         public void Init(TaskSpaceViewModel viewModel, TaskViewAdapter adapter)
         {
             _viewModel = viewModel;
             _adapter = adapter;
             adapter.Init(_viewModel.adapterData, _prefab);
-            adapter.ShortClick.Subscribe(v => Debug.Log(v.Name));
-            adapter.LongClick.Subscribe(v => Debug.Log(v.Description));
+            adapter.ShortClick.Subscribe(v => Debug.Log($"(ShortClick)Name: {v.Name} ("+(v.IsComplete==true?("IsComplete"):("In Process"))+")"));
+            adapter.LongClick.Subscribe(v => Debug.Log($"(LongClick)Description: {v.Description}"));
+            adapter.LongClick.Subscribe(OnSelect);
+            add.onClick.AddListener(OnAdd);
+            remove.onClick.AddListener(OnRemove);
         }
 
-        public void OnSelect(Task task)
+        private void OnSelect(Task task)
         {
             _viewModel.Select(task);
         }
-        public void OnCreateNew()
+        private void OnAdd()
         {
-            _viewModel.CreateNew();
+            _viewModel.CreateNewTest();
         }
-        public void OnRemove()
+        private void OnRemove()
         {
             _viewModel.RemoveTasks();
         }

@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using Tasker.Adapter;
 using UnityEngine;
@@ -37,6 +36,10 @@ namespace Tasker.MVVM
             {
                 _taskSpace.Remove(_selected[i]);
             }
+        }
+        public void CreateNewTest()
+        {
+            _taskSpace.Add(new Task($"Task{_taskSpace.Tasks.Count}", $"Description{_taskSpace.Tasks.Count}.Start", _taskSpace.Tasks.Count % 2 == 0));
         }
         public void ChangeTask()
         {

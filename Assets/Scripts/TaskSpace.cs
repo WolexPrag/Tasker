@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using Tasker.Adapter;
 using UniRx;
@@ -17,7 +16,7 @@ namespace Tasker
         public IObservable<(Task task, int index)> AddTask => _AddTask;
         private readonly Subject<Task> _RemoveTask = new();
         public IObservable<Task> RemoveTask => _RemoveTask;
-     
+
         public TaskSpace()
         {
             _tasks = new List<Task>();
