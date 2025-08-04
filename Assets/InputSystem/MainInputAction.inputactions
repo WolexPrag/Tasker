@@ -49,6 +49,24 @@
                     "processors": "",
                     "interactions": "MultiTap",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Point",
+                    "type": "PassThrough",
+                    "id": "759d92c9-957e-4f0b-b4b6-fbf052371afc",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Delta",
+                    "type": "PassThrough",
+                    "id": "9602a085-b0e8-4c5a-ac24-610f66e7fa5b",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -159,6 +177,50 @@
                     "processors": "",
                     "groups": "",
                     "action": "DoubleTap",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "19a2107f-1015-4c00-adbb-c292083f8aec",
+                    "path": "<Touchscreen>/{Point}",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Point",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b7436444-1685-4a3a-8e07-b18cd409f582",
+                    "path": "<Mouse>/{Point}",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Point",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f51e941e-39bf-4a70-a93c-3841cb9fae61",
+                    "path": "<Touchscreen>/delta",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Delta",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a89f4d6c-8e6b-475f-90df-a4e6fad54723",
+                    "path": "<Mouse>/delta",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Delta",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

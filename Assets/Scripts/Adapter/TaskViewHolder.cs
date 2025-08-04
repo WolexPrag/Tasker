@@ -3,6 +3,7 @@ using Tasker.InputSystem;
 using TMPro;
 using UniRx;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
@@ -12,24 +13,18 @@ namespace Tasker.Adapter
     {
         [SerializeField] private Task _task;
         [Header("View")]
-        [SerializeField] private Toggle _isComplete;
+        [SerializeField] private Toggle _isCompleteToggle;
         [SerializeField] private TMP_Text _name;
         [SerializeField] private TMP_Text _description;
         [SerializeField] private Image _clickablePart;
-        [SerializeField] private readonly Subject<bool> _isCompleteToggled = new();
-        [SerializeField] private readonly ReactiveCommand _longClick = new();
-        [SerializeField] private readonly ReactiveCommand _shortClick = new();
-
+        [SerializeField] private readonly Subject<bool> _isCompleteChanged = new();
         private readonly CompositeDisposable _taskUpdateDisposables = new();
-        private readonly CompositeDisposable _inputActionDisposables = new();
 
-        public IObservable<Unit> ShortClick => _shortClick;
-        public IObservable<Unit> LongClick => _longClick;
-        public IObservable<bool> IsCompleteToggled => _isCompleteToggled;
+        public IObservable<bool> IsCompleteChanged => _isCompleteChanged;
 
-        public void Init(MainInputAction inputAction)
+        public Task Task
         {
-            SubscribeOnInputAction(inputAction);
+            get { return _task; }
         }
         public void Bind(Task task)
         {
@@ -39,17 +34,9 @@ namespace Tasker.Adapter
             }
             _task = task;
             SubscribeOnTaskUpdate(_task);
-        }
-        private void SubscribeOnInputAction(MainInputAction inputAction)
-        {
-            Observable.FromEvent<InputAction.CallbackContext>(
-                handler => inputAction.UI.Tap.performed += handler,
-                handler => inputAction.UI.Tap.performed -= handler
-            ).Subscribe(ctx => _shortClick.Execute()).AddTo(_inputActionDisposables);
-            Observable.FromEvent<InputAction.CallbackContext>(
-                handler => inputAction.UI.SlowTap.performed += handler,
-                handler => inputAction.UI.SlowTap.performed -= handler
-            ).Subscribe(ctx => _longClick.Execute()).AddTo(_inputActionDisposables);
+            _isCompleteToggle.onValueChanged.AsObservable()
+                .Subscribe(v => _isCompleteChanged.OnNext(v))
+                .AddTo(_taskUpdateDisposables);
         }
         private void SubscribeOnTaskUpdate(Task task)
         {
@@ -60,7 +47,7 @@ namespace Tasker.Adapter
                 .Subscribe(newDesc => _description.text = newDesc)
                 .AddTo(_taskUpdateDisposables);
             _task.IsCompleteChanged
-                .Subscribe(isComplete => _isComplete.isOn = isComplete)
+                .Subscribe(isComplete => _isCompleteToggle.isOn = isComplete)
                 .AddTo(_taskUpdateDisposables);
         }
         public void Show()

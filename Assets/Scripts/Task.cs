@@ -4,11 +4,11 @@ using UnityEngine;
 
 namespace Tasker
 {
-    [Serializable]
+    [Serializable] 
     public class Task
     {
 
-        [SerializeField] private ReactiveProperty<string> _name = new();
+         private ReactiveProperty<string> _name = new();
         [SerializeField] private ReactiveProperty<string> _description = new();
         [SerializeField] private ReactiveProperty<bool> _isComplete = new();
 

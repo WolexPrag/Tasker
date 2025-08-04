@@ -73,6 +73,24 @@ namespace Tasker.InputSystem
                     ""processors"": """",
                     ""interactions"": ""MultiTap"",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Point"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""759d92c9-957e-4f0b-b4b6-fbf052371afc"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Delta"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""9602a085-b0e8-4c5a-ac24-610f66e7fa5b"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -185,6 +203,50 @@ namespace Tasker.InputSystem
                     ""action"": ""DoubleTap"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""19a2107f-1015-4c00-adbb-c292083f8aec"",
+                    ""path"": ""<Touchscreen>/{Point}"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Point"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b7436444-1685-4a3a-8e07-b18cd409f582"",
+                    ""path"": ""<Mouse>/{Point}"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Point"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f51e941e-39bf-4a70-a93c-3841cb9fae61"",
+                    ""path"": ""<Touchscreen>/delta"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Delta"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a89f4d6c-8e6b-475f-90df-a4e6fad54723"",
+                    ""path"": ""<Mouse>/delta"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Delta"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -198,6 +260,8 @@ namespace Tasker.InputSystem
             m_UI_Hold = m_UI.FindAction("Hold", throwIfNotFound: true);
             m_UI_Press = m_UI.FindAction("Press", throwIfNotFound: true);
             m_UI_DoubleTap = m_UI.FindAction("DoubleTap", throwIfNotFound: true);
+            m_UI_Point = m_UI.FindAction("Point", throwIfNotFound: true);
+            m_UI_Delta = m_UI.FindAction("Delta", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -264,6 +328,8 @@ namespace Tasker.InputSystem
         private readonly InputAction m_UI_Hold;
         private readonly InputAction m_UI_Press;
         private readonly InputAction m_UI_DoubleTap;
+        private readonly InputAction m_UI_Point;
+        private readonly InputAction m_UI_Delta;
         public struct UIActions
         {
             private @MainInputAction m_Wrapper;
@@ -273,6 +339,8 @@ namespace Tasker.InputSystem
             public InputAction @Hold => m_Wrapper.m_UI_Hold;
             public InputAction @Press => m_Wrapper.m_UI_Press;
             public InputAction @DoubleTap => m_Wrapper.m_UI_DoubleTap;
+            public InputAction @Point => m_Wrapper.m_UI_Point;
+            public InputAction @Delta => m_Wrapper.m_UI_Delta;
             public InputActionMap Get() { return m_Wrapper.m_UI; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -297,6 +365,12 @@ namespace Tasker.InputSystem
                 @DoubleTap.started += instance.OnDoubleTap;
                 @DoubleTap.performed += instance.OnDoubleTap;
                 @DoubleTap.canceled += instance.OnDoubleTap;
+                @Point.started += instance.OnPoint;
+                @Point.performed += instance.OnPoint;
+                @Point.canceled += instance.OnPoint;
+                @Delta.started += instance.OnDelta;
+                @Delta.performed += instance.OnDelta;
+                @Delta.canceled += instance.OnDelta;
             }
 
             private void UnregisterCallbacks(IUIActions instance)
@@ -316,6 +390,12 @@ namespace Tasker.InputSystem
                 @DoubleTap.started -= instance.OnDoubleTap;
                 @DoubleTap.performed -= instance.OnDoubleTap;
                 @DoubleTap.canceled -= instance.OnDoubleTap;
+                @Point.started -= instance.OnPoint;
+                @Point.performed -= instance.OnPoint;
+                @Point.canceled -= instance.OnPoint;
+                @Delta.started -= instance.OnDelta;
+                @Delta.performed -= instance.OnDelta;
+                @Delta.canceled -= instance.OnDelta;
             }
 
             public void RemoveCallbacks(IUIActions instance)
@@ -340,6 +420,8 @@ namespace Tasker.InputSystem
             void OnHold(InputAction.CallbackContext context);
             void OnPress(InputAction.CallbackContext context);
             void OnDoubleTap(InputAction.CallbackContext context);
+            void OnPoint(InputAction.CallbackContext context);
+            void OnDelta(InputAction.CallbackContext context);
         }
     }
 }

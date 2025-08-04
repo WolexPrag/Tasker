@@ -669,12 +669,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8bb99895dd7be7e4bb177641cf1084aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _isComplete: {fileID: 5013139502888013653}
+  _task:
+    _name:
+      value: 
+    _description:
+      value: 
+    _isComplete:
+      value: 0
+  _isCompleteToggle: {fileID: 5013139502888013653}
   _name: {fileID: 1801384714082325689}
   _description: {fileID: 4996488323822125203}
   _clickablePart: {fileID: 1504250706771799119}
-  _longClickTriggered: 0
-  _longPressTime: 0.5
 --- !u!1001 &1074680664881604212
 PrefabInstance:
   m_ObjectHideFlags: 0
