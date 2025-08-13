@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Tasker.Adapter;
+using UniRx;
 using UnityEngine;
 namespace Tasker.MVVM
 {
@@ -10,6 +11,11 @@ namespace Tasker.MVVM
         [SerializeField] private TaskSpace _taskSpace;
         [SerializeField] private List<Task> _selected;
         public ITaskAdapterData adapterData => _taskSpace;
+        private ReactiveCommand<Task> _OnSelect;
+        private ReactiveCommand<Task> _OnUnSelect;
+        public IObservable<Task> OnSelect => _OnSelect;
+        public IObservable<Task> OnUnSelect => _OnUnSelect;
+
         public TaskSpaceViewModel(TaskSpace taskSpace)
         {
             _taskSpace = taskSpace;
@@ -20,10 +26,12 @@ namespace Tasker.MVVM
             if (_selected.Contains(task))
             {
                 _selected.Remove(task);
+                _OnUnSelect.Execute(task);
             }
             else
             {
                 _selected.Add(task);
+                _OnSelect.Execute(task);
             }
         }
         public void CreateNew()

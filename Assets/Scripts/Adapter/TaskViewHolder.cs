@@ -17,6 +17,7 @@ namespace Tasker.Adapter
         [SerializeField] private TMP_Text _name;
         [SerializeField] private TMP_Text _description;
         [SerializeField] private Image _clickablePart;
+        [SerializeField] private Color _colorClickablePart;
         [SerializeField] private readonly Subject<bool> _isCompleteChanged = new();
         private readonly CompositeDisposable _taskUpdateDisposables = new();
 
@@ -49,6 +50,18 @@ namespace Tasker.Adapter
             _task.IsCompleteChanged
                 .Subscribe(isComplete => _isCompleteToggle.isOn = isComplete)
                 .AddTo(_taskUpdateDisposables);
+        }
+        public void Select()
+        {
+            if (_colorClickablePart == null)
+            {
+                _colorClickablePart = _clickablePart.color;
+            }
+            _clickablePart.color = Color.blue;
+        }
+        public void UnSelect()
+        {
+            _clickablePart.color = _colorClickablePart;
         }
         public void Show()
         {

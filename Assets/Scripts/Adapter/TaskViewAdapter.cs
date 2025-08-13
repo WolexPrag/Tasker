@@ -41,6 +41,14 @@ namespace Tasker.Adapter
             InitInputAction();
             DisplayTasks();
         }
+        public void SelectHolder(Task task)
+        {
+            _viewHolders[task].Select();
+        }
+        public void UnSelectHolder(Task task)
+        {
+            _viewHolders[task].UnSelect();
+        }
         public void SetTaskAdapterData(ITaskAdapterData data)
         {
             _data = data;
